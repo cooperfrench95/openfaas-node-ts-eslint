@@ -73,13 +73,13 @@ var middleware = async (req, res) => {
             return res.status(500).send(err.toString ? err.toString() : err)
         }
 
-        if (isArray(functionResult) || isObject(functionResult)) {
-            res.set(fnContext.headers())
-                .status(fnContext.status())
-                .send(JSON.stringify(functionResult))
-        } else {
-            res.set(fnContext.headers()).status(fnContext.status()).send(functionResult)
-        }
+        // if (isArray(functionResult) || isObject(functionResult)) {
+        //     res.set(fnContext.headers())
+        //         .status(fnContext.status())
+        //         .send(JSON.stringify(functionResult))
+        // } else {
+        res.set(fnContext.headers()).status(fnContext.status()).send(functionResult)
+        // }
     }
 
     let fnEvent = new FunctionEvent(req)
