@@ -5,14 +5,7 @@ const express = require('express')
 const app = express()
 const handler = require('./function/handler')
 const bodyParser = require('body-parser')
-// if (process.env.RAW_BODY === 'true') {
-//     app.use(bodyParser.raw({ type: '*/*' }))
-// } else {
-// var jsonLimit = process.env.MAX_JSON_SIZE || '100kb' //body-parser default
-// app.use(bodyParser.json({ limit: jsonLimit}));
-// app.use(bodyParser.raw()); // "Content-Type: application/octet-stream"
-// app.use(bodyParser.text({ type : "text/*" }));
-// }
+
 app.disable('x-powered-by')
 class FunctionEvent {
     constructor(req) {
@@ -61,16 +54,9 @@ var middleware = async (req, res) => {
             console.error(err)
             return res.status(500).send(err.toString ? err.toString() : err)
         }
-        // if(isArray(functionResult) || isObject(functionResult)) {
-        //     res.set(fnContext.headers()).status(fnContext.status()).send(JSON.stringify(functionResult));
-        // } else {
-        // console.log(fnContext.headers())
-        // console.log(functionResult)
-        // res.set(fnContext.headers()).status(fnContext.status()).send(functionResult.bytes(), );
-        // }
         res.setHeader('Content-Transfer-Encoding', 'binary')
         res.setHeader('Content-Type', 'application/octet-stream')
-        res.send(new Buffer(functionResult.bytes(), 'binary'))
+        res.send(new Buffer(functionResult, 'binary'))
     }
     let fnEvent = new FunctionEvent(req)
     let fnContext = new FunctionContext(cb)
@@ -90,12 +76,7 @@ app.patch('/*', middleware)
 app.put('/*', middleware)
 app.delete('/*', middleware)
 const port = process.env.http_port || 3000
+
 app.listen(port, () => {
     console.log(`OpenFaaS Node.js listening on port: ${port}`)
 })
-let isArray = (a) => {
-    return !!a && a.constructor === Array
-}
-let isObject = (a) => {
-    return !!a && a.constructor === Object
-}
