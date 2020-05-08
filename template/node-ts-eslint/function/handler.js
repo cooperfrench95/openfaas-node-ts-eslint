@@ -5,5 +5,5 @@ module.exports = async (event, context) => {
         status: 'Received input: ' + JSON.stringify(event.body),
     }
 
-    return context.status(200).succeed(result)
+    return context.status(200).succeed(result, false)
 }

@@ -37,26 +37,39 @@ class FunctionContext {
         this.headerValues = value
         return this
     }
-    succeed(value) {
+    succeed(value, isBinary) {
         let err
         this.cbCalled++
-        this.cb(err, value)
+        this.cb(err, value, isBinary)
     }
-    fail(value) {
+    fail(value, isBinary) {
         let message
         this.cbCalled++
-        this.cb(value, message)
+        this.cb(value, message, isBinary)
     }
 }
+
+var prepareBinary = (err, result) => {
+    if (err) {
+        return new Buffer.from(err)
+    }
+    return new Buffer.from(result)
+}
+
 var middleware = async (req, res) => {
-    let cb = (err, functionResult) => {
+    let cb = (err, functionResult, isBinary) => {
+
+        if (isBinary) {
+            res.status(fnContext.status())
+            res.setHeader('Content-Transfer-Encoding', 'binary')
+            res.setHeader('Content-Type', 'application/octet-stream')
+            return res.send(prepareBinary(err, functionResult))
+        }
         if (err) {
             console.error(err)
             return res.status(500).send(err.toString ? err.toString() : err)
         }
-        res.setHeader('Content-Transfer-Encoding', 'binary')
-        res.setHeader('Content-Type', 'application/octet-stream')
-        res.send(new Buffer(functionResult, 'binary'))
+        res.set(fnContext.headers()).status(fnContext.status()).send(functionResult);
     }
     let fnEvent = new FunctionEvent(req)
     let fnContext = new FunctionContext(cb)
