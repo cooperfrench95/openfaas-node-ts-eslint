@@ -5,8 +5,25 @@ const express = require('express')
 const app = express()
 const handler = require('./function/handler')
 const bodyParser = require('body-parser')
+const cors = require('cors')
+const helmet = require('helmet')
+
+app.use(helmet())
 
 app.disable('x-powered-by')
+
+var whitelist = process.env.WHITELISTURLS  !== null ? process.env.WHITELISTURLS : []
+
+var corsOptions = {
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  }
+}
+
 class FunctionEvent {
     constructor(req) {
         this.body = req.body
@@ -83,11 +100,13 @@ var middleware = async (req, res) => {
             cb(e)
         })
 }
-app.post('/*', middleware)
-app.get('/*', middleware)
-app.patch('/*', middleware)
-app.put('/*', middleware)
-app.delete('/*', middleware)
+ 
+app.post('/*', cors(corsOptions), middleware)
+app.get('/*', cors(corsOptions), middleware)
+app.patch('/*', cors(corsOptions), middleware)
+app.put('/*', cors(corsOptions), middleware)
+app.delete('/*', cors(corsOptions), middleware)
+
 const port = process.env.http_port || 3000
 
 app.listen(port, () => {
