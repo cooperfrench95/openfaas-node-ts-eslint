@@ -16,7 +16,7 @@ var whitelist = process.env.WHITELISTURLS  !== null ? process.env.WHITELISTURLS 
 
 var corsOptions = {
   origin: function (origin, callback) {
-    if (whitelist.indexOf(origin) !== -1) {
+    if (!origin || whitelist.indexOf('*') !== -1 || whitelist.indexOf(origin) !== -1) {
       callback(null, true)
     } else {
       callback(new Error('Not allowed by CORS'))
@@ -100,12 +100,13 @@ var middleware = async (req, res) => {
             cb(e)
         })
 }
- 
-app.post('/*', cors(corsOptions), middleware)
-app.get('/*', cors(corsOptions), middleware)
-app.patch('/*', cors(corsOptions), middleware)
-app.put('/*', cors(corsOptions), middleware)
-app.delete('/*', cors(corsOptions), middleware)
+
+app.use(cors(corsOptions))
+app.post('/*', middleware)
+app.get('/*', middleware)
+app.patch('/*', middleware)
+app.put('/*', middleware)
+app.delete('/*', middleware)
 
 const port = process.env.http_port || 3000
 
