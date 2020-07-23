@@ -8,10 +8,6 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const helmet = require('helmet')
 
-app.use(helmet())
-
-app.disable('x-powered-by')
-
 var whitelist = process.env.WHITELISTURLS  !== null ? process.env.WHITELISTURLS : []
 
 var corsOptions = {
@@ -101,6 +97,10 @@ var middleware = async (req, res) => {
         })
 }
 
+app.use(bodyParser.json())
+app.use(bodyParser.raw({ type: 'application/octet-stream' }))
+app.use(helmet())
+app.disable('x-powered-by')
 app.use(cors(corsOptions))
 app.post('/*', middleware)
 app.get('/*', middleware)
