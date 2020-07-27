@@ -52,7 +52,6 @@ export default class FunctionContext implements BinaryAcceptingFunctionContext {
   succeed(value: any, isBinary?: Boolean): void {
     let err
     this.cbCalled++
-    console.log('value in succeed', value)
     this.cb(err, value, isBinary, this)
   }
 }
