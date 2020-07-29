@@ -3,7 +3,7 @@
  *
  * This file is for writing a function in TypeScript. If you want
  * to use JavaScript instead, create a file called "handler.js" and
- * this file will be ignored
+ * this file will be ignored. But don't delete this file!
  */
 import { IFunctionEvent, BinaryAcceptingFunctionContext } from './types'
 
