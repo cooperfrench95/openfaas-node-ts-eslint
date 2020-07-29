@@ -6,10 +6,10 @@ FROM riggerthegeek/openfaas-watchdog:of-${WATCHDOG_VERSION}-${ARCH} AS watchdog
 FROM ${ARCH}/node:${NODE_VERSION} as builder
 WORKDIR /opt/app
 COPY . .
-RUN npm ci
+RUN npm i
 WORKDIR /opt/app/function
 COPY function .
-RUN npm ci
+RUN npm i
 WORKDIR /opt/app
 RUN npm run build \
   && cp -Rf node_modules ./dist \
