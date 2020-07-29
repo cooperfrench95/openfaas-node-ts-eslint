@@ -2,7 +2,8 @@
 
 ## 1. Create new function
 
-Make sure you have a `template` folder which contains `node-ts-eslint` folder, which in turn contains your actual template.
+Make sure you have a `template` folder which contains `node-ts-eslint` folder, which in turn contains your actual template. You can also achieve this with:
+`faas template pull https://github.com/cooperfrench95/openfaas-node-ts-eslint`
 
 ```bash
 faas new --lang node-ts-eslint helloworld
