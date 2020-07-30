@@ -34,7 +34,10 @@ class FunctionAsAService {
 
 const service = new FunctionAsAService()
 
-export default async (  event: IFunctionEvent, context: BinaryAcceptingFunctionContext ) => {
+export default async function handler (  
+  event: IFunctionEvent, 
+  context: BinaryAcceptingFunctionContext 
+) {
   try {
     let response;
     switch (event.method) {
