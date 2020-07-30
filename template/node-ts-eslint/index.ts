@@ -17,7 +17,7 @@ import FunctionContext from './lib/functionContext';
 const cors = require('cors')
 const helmet = require('helmet')
 
-const app = express();
+const app = express.default();
 app.disable('x-powered-by');
 
 
